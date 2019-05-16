@@ -26,7 +26,7 @@ object DEChallenge {
     if(! inFIle.exists()){
       throw new RuntimeException(s"Input File $inputDataPath Not Found")
     }
-    val numOfPartitions=max(inFIle.length()/20,7)
+    val numOfPartitions=max(inFIle.length()/1000000,10).toInt
     //initialize the spark session
     val spark = SparkSession.builder()
       .appName("DE-Challenge")
@@ -43,7 +43,7 @@ object DEChallenge {
       .schema(encoder.schema)
       .csv(inputDataPath)
       .as(encoder)
-    val inputDs2:Dataset[LogSchema]=inputDs.repartition(5)
+    val inputDs2:Dataset[LogSchema]=inputDs.repartition(numOfPartitions)
     val formattedDs=inputDs2
       .withColumn("client_host",split(inputDs2("client_host_port"),":").getItem(0))
       .drop("client_host_port")
