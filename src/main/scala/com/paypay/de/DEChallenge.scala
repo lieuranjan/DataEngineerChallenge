@@ -5,7 +5,8 @@ import java.nio.charset.StandardCharsets
 import java.sql.Timestamp
 
 import scala.math.max
-import org.apache.spark.sql.{Dataset, Encoders, SparkSession,functions}
+import org.apache.spark.sql.{Dataset, Encoders, SparkSession}
+import org.apache.spark.sql.functions._
 
 
 case class LogSchema(create_time:Timestamp, elb:String, client_host_port:String, backend_host_port:String, request_processing_time:Double, backend_processing_time:Double, response_processing_time:Double, elb_status_code:Int, backend_status_code:Int, received_bytes:Int, sent_bytes:Int, request:String, user_agent:String, ssl_cipher:String, ssl_protocol:String)
@@ -33,7 +34,7 @@ object DEChallenge {
       .getOrCreate()
     val encoder = Encoders.product[LogSchema]
     //load log data into spark-dataset
-    val logDs:Dataset[LogSchema]=spark
+    val inputDs:Dataset[LogSchema]=spark
       .read
       .option("delimiter"," ")
       .option("quote","\"")
@@ -42,10 +43,11 @@ object DEChallenge {
       .schema(encoder.schema)
       .csv(inputDataPath)
       .as(encoder)
-    val partitionedDs:Dataset[LogSchema]=logDs.repartition(5)
-    //TODO extract only host,
-    // TODO timestamp format
-    partitionedDs.select(c1 = )
-    partitionedDs.show(false)
+    val inputDs2:Dataset[LogSchema]=inputDs.repartition(5)
+    val formattedDs=inputDs2
+      .withColumn("client_host",split(inputDs2("client_host_port"),":").getItem(0))
+      .drop("client_host_port")
+    val dataDs=formattedDs.select(formattedDs("create_time"),formattedDs("client_host"))
+    dataDs.show(false)
   }
 }
