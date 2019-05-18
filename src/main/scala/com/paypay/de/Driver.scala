@@ -21,10 +21,10 @@ object Driver {
     if(! inFIle.exists()){
       throw new RuntimeException(s"Input File $inputDataPath Not Found")
     }
-    println(inFIle.length())
+    //TODO find number of data partitons taking 10MB as block
     val numOfPartitions=min(inFIle.length()/10000000,10).toInt
-    println(numOfPartitions)
-    //initialize the spark session
+
+    //TODO initialize the spark session
     val spark = SparkSession.builder()
       .appName("DE-Challenge")
       .master("local[*]")
