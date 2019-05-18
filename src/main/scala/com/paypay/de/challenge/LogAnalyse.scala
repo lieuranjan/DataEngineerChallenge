@@ -64,9 +64,6 @@ class LogAnalyse(spark:SparkSession,inputPath:String, numOfPartitions:Int) {
       .drop("first_hit_time")
       .drop("last_hit_time")
     sessionedData=sessionedData.join(df3,Seq("interval","client_host"))
-    //sessionedData=sessionedData.persist(StorageLevels.MEMORY_AND_DISK_SER_2)
-    //sessionedData.show(false)
-
     //find mean avg among all session durations.
     val avgSession = sessionedData.groupBy().avg("session_duration")
     avgSession.show(false)
