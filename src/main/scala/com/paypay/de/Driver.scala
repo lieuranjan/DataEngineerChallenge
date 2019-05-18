@@ -28,7 +28,7 @@ object Driver {
       .master("local[*]")
       .getOrCreate()
 
-    val runner=new DEChallenge(spark,inputDataPath,numOfPartitions)
+    val runner=new LogAnalyse(spark,inputDataPath,numOfPartitions)
     runner.run()
   }
 
