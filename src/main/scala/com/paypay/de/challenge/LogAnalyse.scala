@@ -44,7 +44,7 @@ class LogAnalyse(spark:SparkSession,inputPath:String, numOfPartitions:Int) {
     //persisting datasets as we will be using this multiple times.
     ///sessionedData=sessionedData.persist(StorageLevels.MEMORY_AND_DISK_SER_2)
     //sessionedData.show(false)
-    val dsForTotalHits=sessionedData.groupBy(sessionedData("interval"),sessionedData("client_host")).count().as("num_hits_ip")
+    val dsForTotalHits=sessionedData.groupBy(sessionedData("interval"),sessionedData("client_host")).count().withColumnRenamed("count","num_hits_ip")
     dsForTotalHits.show(false)
    // dsForTotalHits.write.mode(SaveMode.Overwrite).parquet("data/output/total_hits_per_session")
 
