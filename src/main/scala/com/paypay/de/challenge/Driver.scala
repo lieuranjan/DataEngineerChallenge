@@ -1,4 +1,4 @@
-package com.paypay.de
+package com.paypay.de.challenge
 
 import java.io.File
 
